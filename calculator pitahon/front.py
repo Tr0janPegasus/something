@@ -1,6 +1,9 @@
-# This is Horrible
+# I can look at this and confidently say 
+# I have absolutely NO IDEA what's happening
+# This just straight up doesn't work
 
 import pygame as pig
+import time
 
 pig.init()
 WINDOW = pig.display.set_mode((450,700))
@@ -10,6 +13,7 @@ RED = (255,0,0)
 GREEN = (0,255,0)
 BLUE = (0,0,255)
 Text = 'Text'
+run = True
 
 #Random ratios and constants I made as per design
 K = 20
@@ -54,12 +58,14 @@ btn_0 = Button(D + 5*K, btn_back.y, '0')
 btn_add = Button(D + 9*K, btn_back.y, '+')
 btn_eq = Button(D + 13*K, btn_back.y, '=')
 
+A = '0'
+B = '0'
 
-
-run = True
 
 
 while run:
+    Num_a = float(A) if '.' in A else int(A)
+    Num_b = float(B) if '.' in B else int(B)
 
     for event in pig.event.get():
         if event.type == pig.QUIT:
@@ -83,7 +89,21 @@ while run:
                 Text += btn_3.text
             elif pos[0] in range(int(btn_min.x), int(btn_min.x + 3*K)) and pos[1] in range(int(btn_min.y), int(btn_min.y + 2*K)):
                 btn_min.click()
-                Text = '-'
+                if Num_a != 0:
+                    B = '0'
+                    B = Text[1:]
+                    if B != '':
+                        Num_b = int(B)
+                        A = str(Num_a - Num_b)
+                    else:
+                        B = '0'
+                    print('1')
+                    print('text: '+Text,'A:'+ A,'B:'+ B, Num_a, Num_b)
+                else:
+                    A = Text
+                    print('2')
+                    print('text: '+Text,'A:'+ A,'B:'+ B, Num_a, Num_b)
+                Text = btn_min.text
 
             #Second row
             elif pos[0] in range(int(btn_4.x), int(btn_4.x + 3*K)) and pos[1] in range(int(btn_4.y), int(btn_4.y + 2*K)):
@@ -97,7 +117,20 @@ while run:
                 Text += btn_6.text
             elif pos[0] in range(int(btn_mult.x), int(btn_mult.x + 3*K)) and pos[1] in range(int(btn_mult.y), int(btn_mult.y + 2*K)):
                 btn_mult.click()
-                Text = '*'
+                if Num_a != 0:
+                    B = Text[1:]
+                    if B != '':
+                        Num_b = int(B)
+                        A = str(Num_a * Num_b)
+                        print('3')
+                        print('text: '+Text,'A:'+ A,'B:'+ B, Num_a, Num_b)
+                    else:
+                        B = '0'
+                else:
+                    A = Text
+                    print('4')
+                    print('text: '+Text,'A:'+ A,'B:'+ B, Num_a, Num_b)
+                Text = btn_mult.text
 
             #Third row
             elif pos[0] in range(int(btn_7.x), int(btn_7.x + 3*K)) and pos[1] in range(int(btn_7.y), int(btn_7.y + 2*K)):
@@ -111,7 +144,25 @@ while run:
                 Text += btn_9.text
             elif pos[0] in range(int(btn_div.x), int(btn_div.x + 3*K)) and pos[1] in range(int(btn_div.y), int(btn_div.y + 2*K)):
                 btn_div.click()
-                Text = '/'
+                if Num_a != 0:
+                    B = '0'
+                    B = Text[1:]
+                    if B != '':
+                        Num_b = int(B) if '.' not in B else float(B)
+                        try:
+                            Num_a = Num_a / Num_b
+                            Text = str(Num_a)
+                        except Exception:
+                            Text = 'Dividing by 0'
+                    else:
+                        B = '0'
+                    print('5')
+                    print('text: '+Text,'A:'+ A,'B:'+ B, Num_a, Num_b)
+                else:
+                    A = Text
+                    print('6')
+                    print('text: '+Text,'A:'+ A,'B:'+ B, Num_a, Num_b)
+                Text = btn_div.text
 
             #Fourth row
             elif pos[0] in range(int(btn_back.x), int(btn_back.x + 3*K)) and pos[1] in range(int(btn_back.y), int(btn_back.y + 2*K)):
@@ -123,10 +174,54 @@ while run:
                 Text += btn_0.text
             elif pos[0] in range(int(btn_add.x), int(btn_add.x + 3*K)) and pos[1] in range(int(btn_add.y), int(btn_add.y + 2*K)):
                 btn_add.click()
-                Text = '+'
+                if Num_a != 0:
+                    B = '0'
+                    B = Text[1:]
+                    if B != '':
+                        Num_b = int(B)
+                        A = str(Num_a + Num_b)
+                    else:
+                        B = '0'
+                    print('7')
+                    print('text: '+Text,'A:'+ A,'B:'+ B, Num_a, Num_b)
+                else:
+                    A = Text
+                    print('8')
+                    print('text: '+Text,'A:'+ A,'B:'+ B, Num_a, Num_b)
+                Text = btn_add.text
+
             elif pos[0] in range(int(btn_eq.x), int(btn_eq.x + 3*K)) and pos[1] in range(int(btn_eq.y), int(btn_eq.y + 2*K)):
                 btn_eq.click()
-
+                if Num_a != 0:
+                    B = '0'
+                    B = Text[1:]
+                    print(B)
+                    if B != '':
+                        Num_b = int(B) if '.' not in B else float(B)
+                        if Text[0] == '+':
+                            A = str(Num_a + Num_b)
+                            Text = A
+                        elif Text[0] == '-':
+                            A = str(Num_a - Num_b)
+                            Text = A
+                        elif Text[0] == '*':
+                            A = str(Num_a * Num_b)
+                            Text = A
+                        elif Text[0] == '/':
+                            try:
+                                Num_a = Num_a / Num_b
+                                Text = str(Num_a)
+                            except ZeroDivisionError:
+                                Text = 'Division by 0'
+                    else:
+                        B = '0'
+                    print('9')
+                    print("text:"+Text,'A:'+A,'B:'+B,Num_a,Num_b)
+                else:
+                    A = Text
+                    print('10')
+                    print('text: '+Text,'A:'+ A,'B:'+ B, Num_a, Num_b)
+    
 
         else:
             WINDOW.fill(WHITE)
@@ -158,5 +253,5 @@ while run:
 
     pig.display.update()
 
-Text = ''
+
 pig.quit()
